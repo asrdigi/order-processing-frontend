@@ -5,7 +5,11 @@ import { CustomerCreate } from '../models/customer';
 
 @Injectable({ providedIn: 'root' })
 export class CustomerService {
-  private API = 'http://localhost:3000/api/v1/customers';
+  // Local development API
+  // private API = 'http://localhost:3000/api/v1/customers';
+  
+  // Production API (Railway)
+  private API = 'https://order-processing-backend-production.up.railway.app/api/v1/customers';
 
   customers = signal<Customer[]>([]);
 

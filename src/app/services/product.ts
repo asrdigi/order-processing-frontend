@@ -4,7 +4,11 @@ import { Product } from '../models/product';
 
 @Injectable({ providedIn: 'root' })
 export class ProductService {
-  private API = 'http://localhost:3000/api/v1/products';
+  // Local development API
+  // private API = 'http://localhost:3000/api/v1/products';
+  
+  // Production API (Railway)
+  private API = 'https://order-processing-backend-production.up.railway.app/api/v1/products';
 
   products = signal<Product[]>([]);
 

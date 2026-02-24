@@ -6,7 +6,11 @@ import { signal } from '@angular/core';
   providedIn: 'root',
 })
 export class AuthService {
-  private API = 'http://localhost:3000/api/v1/users';
+  // Local development API
+  // private API = 'http://localhost:3000/api/v1/users';
+  
+  // Production API (Railway)
+  private API = 'https://order-processing-backend-production.up.railway.app/api/v1/users';
 
   isLoggedIn = signal(false);
 
