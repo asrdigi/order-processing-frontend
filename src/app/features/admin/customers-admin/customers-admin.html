@@ -1,0 +1,37 @@
+<div class="card p-3 mb-4 shadow-sm">
+  <input [(ngModel)]="form.full_name" placeholder="Enter full name" class="form-control mb-2" />
+  <input [(ngModel)]="form.email" placeholder="Enter email address" type="email" class="form-control mb-2" />
+  <input [(ngModel)]="form.phone" placeholder="Enter phone number (optional)" class="form-control mb-2" />
+
+  <button class="btn btn-success w-100" (click)="save()">
+    {{ form.customer_id ? 'Update Customer' : 'Add Customer' }}
+  </button>
+</div>
+
+<div class="card p-3 shadow-sm">
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th width="150">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (c of customers(); track c.customer_id) {
+        <tr>
+          <td>{{ c.full_name }}</td>
+          <td>{{ c.email }}</td>
+          <td>
+            <button class="btn btn-warning btn-sm me-2" (click)="edit(c)">Edit</button>
+            <button class="btn btn-danger btn-sm" (click)="delete(c.customer_id)">Delete</button>
+          </td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="3" class="text-center text-muted">No customers</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

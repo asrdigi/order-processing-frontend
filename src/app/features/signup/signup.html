@@ -1,0 +1,87 @@
+<div class="d-flex justify-content-center align-items-center vh-100 bg-light">
+  <div class="card shadow-lg p-4" style="width: 400px">
+    <h4 class="text-center mb-4">Sign Up</h4>
+
+    <form [formGroup]="signupForm" (ngSubmit)="register()">
+      <!-- Username -->
+      <div class="mb-3">
+        <input formControlName="username" class="form-control" placeholder="Username" />
+
+        @if (signupForm.get('username')?.touched && signupForm.get('username')?.invalid) {
+          <small class="text-danger"> Username must be at least 3 characters </small>
+        }
+      </div>
+
+      <!-- Password -->
+      <div class="mb-3">
+        <input
+          type="password"
+          formControlName="password"
+          class="form-control"
+          placeholder="Password"
+        />
+
+        @if (signupForm.get('password')?.touched && signupForm.get('password')?.invalid) {
+          <small class="text-danger"> Password must be at least 4 characters </small>
+        }
+      </div>
+
+      <!-- Confirm Password -->
+      <div class="mb-3">
+        <input
+          type="password"
+          formControlName="confirmPassword"
+          class="form-control"
+          placeholder="Confirm Password"
+        />
+
+        @if (signupForm.errors?.['mismatch'] && signupForm.get('confirmPassword')?.touched) {
+          <small class="text-danger"> Passwords do not match </small>
+        }
+      </div>
+
+      <!-- Full Name -->
+      <div class="mb-3">
+        <input formControlName="full_name" class="form-control" placeholder="Full Name" />
+      </div>
+
+      <!-- Email -->
+      <div class="mb-3">
+        <input type="email" formControlName="email" class="form-control" placeholder="Email" />
+      </div>
+
+      <!-- Phone -->
+      <div class="mb-3">
+        <input formControlName="phone" class="form-control" placeholder="Phone (optional)" />
+      </div>
+
+      <button class="btn btn-primary w-100" type="submit" [disabled]="isSubmitting()">
+        @if (isSubmitting()) {
+          <span class="spinner-border spinner-border-sm me-2"></span>
+        }
+        Register
+      </button>
+    </form>
+
+    <!-- Success -->
+    @if (successMessage()) {
+      <div class="alert alert-success mt-3 text-center">
+        {{ successMessage() }}
+      </div>
+    }
+
+    <!-- Error -->
+    @if (errorMessage()) {
+      <div class="alert alert-danger mt-3 text-center">
+        {{ errorMessage() }}
+      </div>
+    }
+
+    <div class="text-center mt-3">
+      <small>
+        Already have an account?
+        <a routerLink="/login">Login</a>
+      </small>
+    </div>
+  </div>
+</div>
