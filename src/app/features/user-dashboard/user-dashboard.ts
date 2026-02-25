@@ -25,6 +25,8 @@ export class UserDashboard implements OnInit {
   selectedOrderId = signal<number | null>(null);
   selectedItems = signal<any[]>([]);
   isLoading = signal(false);
+  showAddressConfirm = signal(false);
+  userAddress = signal<string>('');
 
   orderForm = this.fb.group({
     items: this.fb.array([]),
@@ -35,9 +37,20 @@ export class UserDashboard implements OnInit {
   }
 
   ngOnInit() {
-    this.orderService.load(); // backend filters by JWT user
+    this.orderService.load();
     this.productService.load();
+    this.loadUserAddress();
     this.addItem();
+  }
+
+  loadUserAddress() {
+    this.customerService.getAll().subscribe((customers: any[]) => {
+      const userId = JSON.parse(localStorage.getItem('user') || '{}').customer_id;
+      const customer = customers.find(c => c.customer_id === userId);
+      if (customer) {
+        this.userAddress.set(customer.address || 'No address on file');
+      }
+    });
   }
 
   /* ================= ORDER CREATION ================= */
@@ -67,7 +80,10 @@ export class UserDashboard implements OnInit {
 
   submit() {
     if (this.orderForm.invalid) return;
+    this.showAddressConfirm.set(true);
+  }
 
+  confirmAndProceed() {
     const rawItems = this.orderForm.value.items ?? [];
 
     const payload = {
@@ -82,6 +98,10 @@ export class UserDashboard implements OnInit {
       const amount = this.getTotal();
       this.router.navigate(['/payment'], { queryParams: { orderId, amount } });
     });
+  }
+
+  cancelAddressConfirm() {
+    this.showAddressConfirm.set(false);
   }
   /* ================= VIEW ORDER DETAILS ================= */
 

@@ -1,5 +1,7 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { OrderService } from '../../services/order';
+import { HttpClient } from '@angular/common/http';
 
 declare var Razorpay: any;
 
@@ -34,6 +36,8 @@ declare var Razorpay: any;
 export class Payment implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private orderService = inject(OrderService);
+  private http = inject(HttpClient);
 
   orderId = signal<number>(0);
   amount = signal<number>(0);
@@ -61,6 +65,7 @@ export class Payment implements OnInit {
       modal: {
         ondismiss: () => {
           this.loading.set(false);
+          this.deleteOrder();
         },
       },
     };
@@ -71,6 +76,16 @@ export class Payment implements OnInit {
   }
 
   cancel() {
-    this.router.navigate(['/user']);
+    if (confirm('Are you sure you want to cancel this order?')) {
+      this.deleteOrder();
+    }
+  }
+
+  deleteOrder() {
+    const API = 'https://order-processing-backend-production.up.railway.app/api/v1/orders';
+    this.http.delete(`${API}/${this.orderId()}`).subscribe(() => {
+      alert('Order cancelled');
+      this.router.navigate(['/user']);
+    });
   }
 }
