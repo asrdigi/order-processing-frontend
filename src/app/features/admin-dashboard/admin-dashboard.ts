@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { CustomersAdmin } from '../admin/customers-admin/customers-admin';
 import { ProductsAdmin } from '../admin/products-admin/products-admin';
 import { OrdersAdmin } from '../admin/orders-admin/orders-admin';
-import { AuthService } from '../../core/auth-service';
 
 @Component({
   standalone: true,
@@ -11,7 +10,6 @@ import { AuthService } from '../../core/auth-service';
     <div class="container mt-4">
       <div class="d-flex justify-content-between align-items-center mb-4">
         <h4 class="fw-bold">Admin Dashboard</h4>
-        <button class="btn btn-outline-danger btn-sm" (click)="logout()">Logout</button>
       </div>
 
       <!-- Tabs -->
@@ -66,11 +64,4 @@ import { AuthService } from '../../core/auth-service';
 })
 export class AdminDashboard {
   activeTab: 'customers' | 'products' | 'orders' = 'customers';
-
-  constructor(private authService: AuthService) {}
-
-  logout() {
-    this.authService.logout();
-    location.href = '/login';
-  }
 }

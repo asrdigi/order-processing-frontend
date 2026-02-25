@@ -2,7 +2,6 @@
   <!-- ================= HEADER ================= -->
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h4 class="fw-bold">User Dashboard</h4>
-    <button class="btn btn-outline-danger btn-sm" (click)="logout()">Logout</button>
   </div>
 
   <!-- ================= CREATE ORDER ================= -->
@@ -56,6 +55,7 @@
         <thead>
           <tr>
             <th>ID</th>
+            <th>Date</th>
             <th>Total</th>
             <th>Status</th>
           </tr>
@@ -74,6 +74,8 @@
                 </a>
               </td>
 
+              <td>{{ order.order_date | date: 'shortDate' }}</td>
+
               <td>₹{{ order.totalAmount }}</td>
 
               <td>
@@ -90,7 +92,7 @@
             </tr>
           } @empty {
             <tr>
-              <td colspan="3" class="text-center text-muted">No orders found</td>
+              <td colspan="4" class="text-center text-muted">No orders found</td>
             </tr>
           }
         </tbody>

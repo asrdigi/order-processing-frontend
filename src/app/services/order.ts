@@ -8,7 +8,7 @@ import { OrderItem } from '../models/order-detail';
 export class OrderService {
   // Local development API
   // private API = 'http://localhost:3000/api/v1/orders';
-  
+
   // Production API (Railway)
   private API = 'https://order-processing-backend-production.up.railway.app/api/v1/orders';
 
@@ -17,12 +17,14 @@ export class OrderService {
   constructor(private http: HttpClient) {}
 
   load() {
+    this.orders.set([]); // Clear existing orders first
     this.http.get<any[]>(this.API).subscribe((data) => {
       const mapped: OrderSummary[] = data.map((o) => ({
         order_id: o.order_id,
         totalAmount: o.total_amount,
         status: o.status,
         full_name: o.full_name,
+        order_date: o.order_date,
       }));
 
       this.orders.set(mapped);

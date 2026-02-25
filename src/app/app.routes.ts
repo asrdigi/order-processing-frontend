@@ -40,5 +40,12 @@ export const routes: Routes = [
       import('./features/user-dashboard/user-dashboard').then((m) => m.UserDashboard),
   },
 
+  {
+    path: 'payment',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/payment/payment').then((m) => m.Payment),
+  },
+
   { path: '**', redirectTo: 'login' },
 ];

@@ -4,6 +4,7 @@
       <tr>
         <th>Order ID</th>
         <th>Customer</th>
+        <th>Date</th>
         <th>Total</th>
         <th>Status</th>
         <th>Actions</th>
@@ -14,6 +15,7 @@
         <tr>
           <td>{{ order.order_id }}</td>
           <td>{{ order.full_name }}</td>
+          <td>{{ order.order_date | date: 'shortDate' }}</td>
           <td>₹{{ order.totalAmount }}</td>
           <td>
             <select
@@ -35,7 +37,7 @@
         </tr>
       } @empty {
         <tr>
-          <td colspan="5" class="text-center text-muted">No orders found</td>
+          <td colspan="6" class="text-center text-muted">No orders found</td>
         </tr>
       }
     </tbody>

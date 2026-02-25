@@ -46,7 +46,11 @@ export class AuthService {
     const payload = JSON.parse(atob(token.split('.')[1]));
     console.log(payload);
     console.log(payload.role);
-    localStorage.setItem('role', payload.role);
+    
+    // Only set role if it exists in the token payload
+    if (payload.role) {
+      localStorage.setItem('role', payload.role);
+    }
   }
 
   getToken() {
@@ -54,6 +58,14 @@ export class AuthService {
   }
 
   getRole() {
-    return localStorage.getItem('role');
+    const token = localStorage.getItem('token');
+    if (!token) return null;
+    
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload.role;
+    } catch {
+      return null;
+    }
   }
 }

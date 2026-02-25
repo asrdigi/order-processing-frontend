@@ -539,3 +539,60 @@ git commit -m "Initial commit: Frontend"
 git branch -M main
 git remote add origin https://github.com/asrdigi/order-processing-frontend.git
 git push -u origin main
+
+======================
+
+create a payment flow with Razorpay integration (popular in India and easy to integrate).
+
+Plan:
+
+Create a payment component
+
+Modify order creation to redirect to payment page
+
+Add Razorpay integration
+
+Update order status after successful payment
+
+===========================
+Changes Made:
+
+Created Payment Component (/payment) - Shows order details and payment button
+
+Modified User Dashboard - After creating order, redirects to payment page with orderId and amount
+
+Added Razorpay Script - Integrated Razorpay payment gateway
+
+Added Payment Route - New /payment route for payment page
+
+To Complete Setup:
+
+Get Razorpay API Key:
+
+Sign up at https://razorpay.com
+
+Go to Settings → API Keys
+
+Copy your Test Key (starts with rzp*test*)
+
+Replace rzp_test_YOUR_KEY_HERE in payment.ts
+
+Test the flow:
+
+Login as USER
+
+Create an order
+
+You'll be redirected to payment page
+
+Click "Pay Now" to open Razorpay modal
+
+Use test card: 4111 1111 1111 1111, any future date, any CVV
+
+The payment is currently in test mode. For production, you'll need to:
+
+Get live API keys from Razorpay
+
+Add backend verification of payment
+
+Update order status to "Processing" after successful payment

@@ -1,14 +1,15 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, effect } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { OrderService } from '../../services/order';
 import { CustomerService } from '../../services/customer';
 import { ProductService } from '../../services/product';
-import { AuthService } from '../../core/auth-service';
+import { DatePipe } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-dashboard',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, DatePipe],
   templateUrl: './user-dashboard.html',
 })
 export class UserDashboard implements OnInit {
@@ -16,7 +17,7 @@ export class UserDashboard implements OnInit {
   private orderService = inject(OrderService);
   private customerService = inject(CustomerService);
   private productService = inject(ProductService);
-  private authService = inject(AuthService);
+  private router = inject(Router);
 
   orders = this.orderService.orders;
   products = this.productService.products;
@@ -37,6 +38,9 @@ export class UserDashboard implements OnInit {
     this.orderService.load(); // backend filters by JWT user
     this.productService.load();
     this.addItem();
+    
+    // Auto-refresh orders every 5 seconds
+    setInterval(() => this.orderService.load(), 5000);
   }
 
   /* ================= ORDER CREATION ================= */
@@ -76,11 +80,10 @@ export class UserDashboard implements OnInit {
       })),
     };
 
-    this.orderService.create(payload).subscribe(() => {
-      this.orderService.load();
-      this.orderForm.reset();
-      this.items.clear();
-      this.addItem();
+    this.orderService.create(payload).subscribe((res: any) => {
+      const orderId = res.order_id;
+      const amount = this.getTotal();
+      this.router.navigate(['/payment'], { queryParams: { orderId, amount } });
     });
   }
   /* ================= VIEW ORDER DETAILS ================= */
@@ -98,10 +101,5 @@ export class UserDashboard implements OnInit {
   closeOverlay() {
     this.selectedOrderId.set(null);
     this.selectedItems.set([]);
-  }
-
-  logout() {
-    this.authService.logout();
-    location.href = '/login';
   }
 }
