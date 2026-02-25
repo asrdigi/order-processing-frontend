@@ -38,9 +38,6 @@ export class UserDashboard implements OnInit {
     this.orderService.load(); // backend filters by JWT user
     this.productService.load();
     this.addItem();
-    
-    // Auto-refresh orders every 5 seconds
-    setInterval(() => this.orderService.load(), 5000);
   }
 
   /* ================= ORDER CREATION ================= */

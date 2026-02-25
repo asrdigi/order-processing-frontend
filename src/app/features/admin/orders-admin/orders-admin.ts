@@ -21,6 +21,10 @@ export class OrdersAdmin implements OnInit {
     this.service.load();
   }
 
+  refreshOrders() {
+    this.service.load();
+  }
+
   updateStatus(orderId: number, newStatus: string) {
     console.log('Updating order status - Current role:', localStorage.getItem('role'));
     console.log('Token:', localStorage.getItem('token'));
