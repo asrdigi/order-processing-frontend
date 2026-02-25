@@ -19,6 +19,7 @@ export class OrderService {
   load() {
     this.orders.set([]); // Clear existing orders first
     this.http.get<any[]>(this.API).subscribe((data) => {
+      console.log('Raw order data from API:', data);
       const mapped: OrderSummary[] = data.map((o) => ({
         order_id: o.order_id,
         totalAmount: o.total_amount,
@@ -26,7 +27,7 @@ export class OrderService {
         full_name: o.full_name,
         order_date: o.order_date,
       }));
-
+      console.log('Mapped orders:', mapped);
       this.orders.set(mapped);
     });
   }
