@@ -58,11 +58,32 @@ export class UserDashboard implements OnInit, OnDestroy {
   }
 
   loadUserAddress() {
-    this.customerService.getAll().subscribe((customers: any[]) => {
-      const userId = JSON.parse(localStorage.getItem('user') || '{}').customer_id;
-      const customer = customers.find(c => c.customer_id === userId);
-      if (customer) {
-        this.userAddress.set(customer.address || 'No address on file');
+    this.customerService.getAll().subscribe({
+      next: (customers: any[]) => {
+        // Get customer_id from JWT token
+        const token = localStorage.getItem('token');
+        if (!token) {
+          this.userAddress.set('Please login to see address');
+          return;
+        }
+        
+        try {
+          const payload = JSON.parse(atob(token.split('.')[1]));
+          const userId = payload.customer_id;
+          
+          const customer = customers.find(c => c.customer_id === userId);
+          
+          if (customer) {
+            this.userAddress.set(customer.address || 'No address on file');
+          } else {
+            this.userAddress.set('Customer not found');
+          }
+        } catch (err) {
+          this.userAddress.set('Error loading address');
+        }
+      },
+      error: (err) => {
+        this.userAddress.set('Unable to load address');
       }
     });
   }
