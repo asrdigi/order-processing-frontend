@@ -77,15 +77,45 @@ export class Payment implements OnInit {
 
   cancel() {
     if (confirm('Are you sure you want to cancel this order?')) {
+      this.loading.set(true);
       this.deleteOrder();
     }
   }
 
   deleteOrder() {
-    const API = 'https://order-processing-backend-production.up.railway.app/api/v1/orders';
-    this.http.delete(`${API}/${this.orderId()}`).subscribe(() => {
-      alert('Order cancelled');
-      this.router.navigate(['/user']);
+    console.log('Attempting to delete order:', this.orderId());
+    
+    this.orderService.delete(this.orderId()).subscribe({
+      next: () => {
+        console.log('Order deleted successfully');
+        this.loading.set(false);
+        alert('Order cancelled');
+        console.log('About to navigate to /user');
+        setTimeout(() => {
+          this.router.navigate(['/user']).then(() => {
+            console.log('Navigation completed');
+          });
+        }, 100);
+      },
+      error: (err) => {
+        console.error('Error deleting order:', err);
+        console.error('Error status:', err.status);
+        console.error('Error message:', err.message);
+        this.loading.set(false);
+        
+        // If order doesn't exist (404), treat it as already cancelled
+        if (err.status === 404) {
+          alert('Order has already been cancelled or does not exist');
+          console.log('About to navigate to /user after 404');
+          setTimeout(() => {
+            this.router.navigate(['/user']).then(() => {
+              console.log('Navigation completed after 404');
+            });
+          }, 100);
+        } else {
+          alert('Failed to cancel order. Please try again.');
+        }
+      }
     });
   }
 }

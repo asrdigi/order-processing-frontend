@@ -43,4 +43,8 @@ export class OrderService {
   getItems(orderId: number) {
     return this.http.get<OrderItem[]>(`${this.API}/${orderId}/items`);
   }
+
+  delete(orderId: number) {
+    return this.http.delete(`${this.API}/${orderId}`);
+  }
 }

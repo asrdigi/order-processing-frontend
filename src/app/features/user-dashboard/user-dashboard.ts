@@ -1,10 +1,12 @@
-import { Component, inject, OnInit, signal, effect } from '@angular/core';
+import { Component, inject, OnInit, signal, effect, OnDestroy } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { OrderService } from '../../services/order';
 import { CustomerService } from '../../services/customer';
 import { ProductService } from '../../services/product';
 import { DatePipe } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-user-dashboard',
@@ -12,12 +14,13 @@ import { Router } from '@angular/router';
   imports: [ReactiveFormsModule, DatePipe],
   templateUrl: './user-dashboard.html',
 })
-export class UserDashboard implements OnInit {
+export class UserDashboard implements OnInit, OnDestroy {
   private fb = inject(FormBuilder);
   private orderService = inject(OrderService);
   private customerService = inject(CustomerService);
   private productService = inject(ProductService);
   private router = inject(Router);
+  private routerSubscription?: Subscription;
 
   orders = this.orderService.orders;
   products = this.productService.products;
@@ -41,6 +44,17 @@ export class UserDashboard implements OnInit {
     this.productService.load();
     this.loadUserAddress();
     this.addItem();
+
+    // Reload orders whenever we navigate to this route
+    this.routerSubscription = this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe(() => {
+        this.orderService.load();
+      });
+  }
+
+  ngOnDestroy() {
+    this.routerSubscription?.unsubscribe();
   }
 
   loadUserAddress() {

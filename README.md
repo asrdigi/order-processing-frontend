@@ -19,8 +19,8 @@ Update package.json:
 
     {
     "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js"
+    "start": "node app.js",
+    "dev": "nodemon app.js"
     }
     }
 
@@ -262,8 +262,8 @@ Backend: Render Free
 Database: Supabase Free
 Cost: $0/month
 
-Copy
 For Small Business (Budget)
+
 Frontend: Netlify Pro ($19/month)
 Backend: Railway Hobby ($5/month)
 Database: PlanetScale Scaler ($29/month)
@@ -277,14 +277,13 @@ Database: AWS RDS t3.small
 Load Balancer: AWS ALB
 Cost: ~$114/month
 
-Copy
 For Enterprise (Scalable)
+
 Frontend: AWS CloudFront + S3
 Backend: AWS ECS Fargate (auto-scaling)
 Database: AWS RDS Multi-AZ
 Cost: $300-500/month (varies with traffic)
 
-Copy
 COST OPTIMIZATION TIPS
 Use Free Tiers First
 
@@ -328,7 +327,6 @@ Render (Backend) - Free
 PlanetScale (Database) - Free
 Total: $0/month
 
-Copy
 Growing (100-1000 users):
 
 Vercel (Frontend) - Free
@@ -336,7 +334,6 @@ Railway (Backend) - $5/month
 PlanetScale Scaler - $29/month
 Total: $34/month
 
-Copy
 Established (1000+ users):
 
 AWS S3 + CloudFront - $15/month
@@ -344,7 +341,6 @@ AWS EC2 t3.small - $16/month
 AWS RDS t3.small - $50/month
 Total: $81/month
 
-Copy
 For AWS pricing calculator: https://calculator.aws
 
 what is Render Free? Is it simiar to Node Js
@@ -364,7 +360,6 @@ Website: https://render.com
 How it Works
 Your Node.js Code → Push to GitHub → Render deploys it → Live API
 
-Copy
 Render vs Node.js
 Aspect Node.js Render
 What it is JavaScript runtime (programming environment) Cloud hosting platform (deployment service)
@@ -403,7 +398,6 @@ git commit -m "Initial commit"
 git remote add origin https://github.com/yourusername/your-repo.git
 git push -u origin main
 
-Copy
 Step 2: Create Render Account
 Go to https://render.com
 
@@ -418,7 +412,6 @@ Build Command: npm install
 Start Command: node server.js
 Plan: Free
 
-Copy
 Step 4: Add Environment Variables
 In Render dashboard, add:
 
@@ -429,7 +422,6 @@ DB_PASSWORD=your-db-password
 DB_NAME=order_processing_db
 JWT_SECRET=your-secret-key
 
-Copy
 Step 5: Deploy
 Click "Create Web Service"
 
@@ -444,22 +436,21 @@ Alternative Free Hosting Options
    Website: railway.app
    Pros: No sleep, better performance
 
-Copy 2. Fly.io
-Free Tier: 3 shared VMs
-Website: fly.io
-Pros: Global deployment, no sleep
+2. Fly.io
+   Free Tier: 3 shared VMs
+   Website: fly.io
+   Pros: Global deployment, no sleep
 
-Copy 3. Cyclic
-Free Tier: Unlimited apps
-Website: cyclic.sh
-Pros: Serverless, no cold starts
+3. Cyclic
+   Free Tier: Unlimited apps
+   Website: cyclic.sh
+   Pros: Serverless, no cold starts
 
-Copy 4. Glitch
-Free Tier: Unlimited projects
-Website: glitch.com
-Pros: Easy to use, live editor
+4. Glitch
+   Free Tier: Unlimited projects
+   Website: glitch.com
+   Pros: Easy to use, live editor
 
-Copy
 Comparison: Free Hosting Options
 Platform Sleep? RAM Database Best For
 Render Yes (15 min) 512 MB PostgreSQL 90 days Simple apps
@@ -474,7 +465,6 @@ Frontend: Vercel (free, no sleep)
 Backend: Railway (free $5 credit, no sleep)
 Database: PlanetScale (free 5GB)
 
-Copy
 Why Railway over Render for your case:
 
 No sleep (instant response)
@@ -511,7 +501,6 @@ railway add
 
 railway domain
 
-Copy
 Your backend will be live at: https://your-app.up.railway.app
 
 Summary: Render is a hosting platform (not a language) where you deploy your Node.js backend. It's free but has limitations like app sleeping. Railway or Fly.io might be better free alternatives for your use case.
