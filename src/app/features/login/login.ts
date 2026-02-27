@@ -100,21 +100,27 @@ export class Login {
   // }
 
   login() {
-    this.auth.login(this.username, this.password).subscribe((res) => {
-      if (res.status === 'success') {
-        console.log(res);
-        this.auth.setLoginState(true);
-        this.auth.setTokens(res.token);
+    this.errorMessage.set('');
+    
+    this.auth.login(this.username, this.password).subscribe({
+      next: (res) => {
+        if (res.status === 'success') {
+          this.auth.setLoginState(true);
+          this.auth.setTokens(res.token);
 
-        const role = this.auth.getRole();
-        console.log('In Login component: ' + role);
+          const role = this.auth.getRole();
 
-        if (role === 'ADMIN') {
-          this.router.navigate(['/admin']);
+          if (role === 'ADMIN') {
+            this.router.navigate(['/admin']);
+          } else {
+            this.router.navigate(['/user']);
+          }
         } else {
-          console.log('Navigating to user dashboard');
-          this.router.navigate(['/user']);
+          this.errorMessage.set(res.message || 'Invalid credentials');
         }
+      },
+      error: () => {
+        this.errorMessage.set('Login failed. Please try again.');
       }
     });
   }

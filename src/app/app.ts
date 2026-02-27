@@ -19,7 +19,9 @@ import { inject, computed } from '@angular/core';
         -->
 
         <!-- LOGOUT BUTTON -->
-        <button class="btn btn-outline-light btn-sm" (click)="logout()">Logout</button>
+        @if (auth.isLoggedIn()) {
+          <button class="btn btn-outline-light btn-sm" (click)="logout()">Logout</button>
+        }
       </div>
     </nav>
 
