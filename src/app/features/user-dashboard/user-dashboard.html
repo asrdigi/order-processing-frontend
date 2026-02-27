@@ -1,122 +1,142 @@
 <div class="container mt-4">
   <!-- ================= HEADER ================= -->
   <div class="d-flex justify-content-between align-items-center mb-4">
-    <h4 class="fw-bold">User Dashboard</h4>
+    <h4 class="fw-bold">Welcome {{ username() }}</h4>
   </div>
 
-  <!-- ================= CREATE ORDER ================= -->
-  <div class="card shadow-sm mb-4">
-    <div class="card-body">
-      <h5>Create New Order</h5>
+  <!-- ================= TABS ================= -->
+  <ul class="nav nav-tabs mb-4">
+    <li class="nav-item">
+      <button 
+        class="nav-link" 
+        [class.active]="activeTab() === 'create'"
+        (click)="activeTab.set('create')">
+        Place Order
+      </button>
+    </li>
+    <li class="nav-item">
+      <button 
+        class="nav-link" 
+        [class.active]="activeTab() === 'orders'"
+        (click)="activeTab.set('orders')">
+        My Orders
+      </button>
+    </li>
+  </ul>
 
-      <form [formGroup]="orderForm" (ngSubmit)="submit()">
-        <div formArrayName="items">
-          @for (item of items.controls; track $index; let i = $index) {
-            <div [formGroupName]="i" class="row mb-3 align-items-center">
-              <div class="col-md-6">
-                <select formControlName="productId" class="form-select">
-                  <option value="">Select Product</option>
-                  @for (p of products(); track p.product_id) {
-                    <option [value]="p.product_id">{{ p.name }} - ₹{{ p.price }}</option>
-                  }
-                </select>
-                @if (item.value.productId) {
-                  @for (p of products(); track p.product_id) {
-                    @if (p.product_id == item.value.productId) {
-                      <div class="d-flex align-items-center mt-2">
-                        <img [src]="p.image_url || getPlaceholderImage(50)" 
-                             [alt]="p.name" 
-                             (error)="$any($event.target).src=getPlaceholderImage(50)"
-                             (click)="openImageModal(p.image_url || getPlaceholderImage(50))"
-                             class="me-2" 
-                             style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px; cursor: pointer;">
-                        <div>
-                          <div class="fw-bold">{{ p.name }}</div>
-                          <div class="text-muted small">₹{{ p.price }}</div>
+  <!-- ================= CREATE ORDER TAB ================= -->
+  @if (activeTab() === 'create') {
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <form [formGroup]="orderForm" (ngSubmit)="submit()">
+          <div formArrayName="items">
+            @for (item of items.controls; track $index; let i = $index) {
+              <div [formGroupName]="i" class="row mb-3 align-items-center">
+                <div class="col-md-6">
+                  <select formControlName="productId" class="form-select">
+                    <option value="">Select Product</option>
+                    @for (p of products(); track p.product_id) {
+                      <option [value]="p.product_id">{{ p.name }} - ₹{{ p.price }}</option>
+                    }
+                  </select>
+                  @if (item.value.productId) {
+                    @for (p of products(); track p.product_id) {
+                      @if (p.product_id == item.value.productId) {
+                        <div class="d-flex align-items-center mt-2">
+                          <img [src]="p.image_url || getPlaceholderImage(50)" 
+                               [alt]="p.name" 
+                               (error)="$any($event.target).src=getPlaceholderImage(50)"
+                               (click)="openImageModal(p.image_url || getPlaceholderImage(50))"
+                               class="me-2" 
+                               style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px; cursor: pointer;">
+                          <div>
+                            <div class="fw-bold">{{ p.name }}</div>
+                            <div class="text-muted small">₹{{ p.price }}</div>
+                          </div>
                         </div>
-                      </div>
+                      }
                     }
                   }
-                }
+                </div>
+
+                <div class="col-md-3">
+                  <input type="number" formControlName="quantity" class="form-control" min="1" />
+                </div>
+
+                <div class="col-md-3">
+                  <button type="button" class="btn btn-danger w-100" (click)="removeItem(i)">
+                    Remove
+                  </button>
+                </div>
               </div>
+            }
+          </div>
 
-              <div class="col-md-3">
-                <input type="number" formControlName="quantity" class="form-control" min="1" />
-              </div>
+          <button type="button" class="btn btn-secondary mb-3" (click)="addItem()">
+            Add Product
+          </button>
 
-              <div class="col-md-3">
-                <button type="button" class="btn btn-danger w-100" (click)="removeItem(i)">
-                  Remove
-                </button>
-              </div>
-            </div>
-          }
-        </div>
+          <h6>Total: ₹{{ getTotal() }}</h6>
 
-        <button type="button" class="btn btn-secondary mb-3" (click)="addItem()">
-          Add Product
-        </button>
-
-        <h6>Total: ₹{{ getTotal() }}</h6>
-
-        <button class="btn btn-primary w-100 mt-3" type="submit">Submit Order</button>
-      </form>
+          <button class="btn btn-primary w-100 mt-3" type="submit">Submit Order</button>
+        </form>
+      </div>
     </div>
-  </div>
+  }
 
-  <!-- ================= MY ORDERS ================= -->
-  <div class="card shadow-sm">
-    <div class="card-body">
-      <h5>My Orders</h5>
-
-      <table class="table table-hover">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Date</th>
-            <th>Total</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          @for (order of orders(); track order.order_id) {
+  <!-- ================= MY ORDERS TAB ================= -->
+  @if (activeTab() === 'orders') {
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <table class="table table-hover">
+          <thead>
             <tr>
-              <td>
-                <a
-                  href="javascript:void(0)"
-                  (click)="viewOrder(order.order_id)"
-                  class="fw-bold text-decoration-none"
-                >
-                  {{ order.order_id }}
-                </a>
-              </td>
-
-              <td>{{ order.order_date | date: 'shortDate' }}</td>
-
-              <td>₹{{ order.totalAmount }}</td>
-
-              <td>
-                <span
-                  class="badge"
-                  [class.bg-warning]="order.status === 'Pending'"
-                  [class.bg-info]="order.status === 'Processing'"
-                  [class.bg-primary]="order.status === 'Shipped'"
-                  [class.bg-success]="order.status === 'Delivered'"
-                >
-                  {{ order.status }}
-                </span>
-              </td>
+              <th>ID</th>
+              <th>Date</th>
+              <th>Total</th>
+              <th>Status</th>
             </tr>
-          } @empty {
-            <tr>
-              <td colspan="4" class="text-center text-muted">No orders found</td>
-            </tr>
-          }
-        </tbody>
-      </table>
+          </thead>
+
+          <tbody>
+            @for (order of orders(); track order.order_id) {
+              <tr>
+                <td>
+                  <a
+                    href="javascript:void(0)"
+                    (click)="viewOrder(order.order_id)"
+                    class="fw-bold text-decoration-none"
+                  >
+                    {{ order.order_id }}
+                  </a>
+                </td>
+
+                <td>{{ order.order_date | date: 'shortDate' }}</td>
+
+                <td>₹{{ order.totalAmount }}</td>
+
+                <td>
+                  <span
+                    class="badge"
+                    [class.bg-warning]="order.status === 'Pending'"
+                    [class.bg-info]="order.status === 'Processing'"
+                    [class.bg-primary]="order.status === 'Shipped'"
+                    [class.bg-success]="order.status === 'Delivered'"
+                  >
+                    {{ order.status }}
+                  </span>
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="4" class="text-center text-muted">No orders found</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
     </div>
-  </div>
+  }
 </div>
 
 <!-- ================= ADDRESS CONFIRMATION OVERLAY ================= -->

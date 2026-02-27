@@ -31,6 +31,8 @@ export class UserDashboard implements OnInit, OnDestroy {
   showAddressConfirm = signal(false);
   userAddress = signal<string>('');
   selectedImage = signal<string | null>(null);
+  activeTab = signal<'create' | 'orders'>('create');
+  username = signal<string>('');
 
   orderForm = this.fb.group({
     items: this.fb.array([]),
@@ -44,6 +46,7 @@ export class UserDashboard implements OnInit, OnDestroy {
     this.orderService.load();
     this.productService.load();
     this.loadUserAddress();
+    this.loadUsername();
     this.addItem();
 
     // Reload orders whenever we navigate to this route
@@ -87,6 +90,18 @@ export class UserDashboard implements OnInit, OnDestroy {
         this.userAddress.set('Unable to load address');
       }
     });
+  }
+
+  loadUsername() {
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        this.username.set(payload.username || 'User');
+      } catch (err) {
+        this.username.set('User');
+      }
+    }
   }
 
   /* ================= ORDER CREATION ================= */
