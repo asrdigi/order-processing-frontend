@@ -17,12 +17,22 @@ import { signal } from '@angular/core';
         <input [(ngModel)]="username" class="form-control mb-3" placeholder="Username" />
 
         <!-- Password -->
-        <input
-          [(ngModel)]="password"
-          type="password"
-          class="form-control mb-3"
-          placeholder="Password"
-        />
+        <div class="position-relative mb-3">
+          <input
+            [(ngModel)]="password"
+            [type]="showPassword() ? 'text' : 'password'"
+            class="form-control"
+            placeholder="Password"
+          />
+          <button
+            type="button"
+            class="btn btn-link position-absolute end-0 top-50 translate-middle-y"
+            (click)="togglePassword()"
+            style="text-decoration: none; color: #6c757d;"
+          >
+            {{ showPassword() ? '👁️' : '👁️‍🗨️' }}
+          </button>
+        </div>
 
         <!-- Login Button -->
         <button class="btn btn-primary w-100 mb-3" (click)="login()">Login</button>
@@ -55,9 +65,14 @@ export class Login {
   password = '';
 
   errorMessage = signal('');
+  showPassword = signal(false);
 
   private auth = inject(AuthService);
   private router = inject(Router);
+
+  togglePassword() {
+    this.showPassword.set(!this.showPassword());
+  }
 
   // login() {
   //   // Clear previous error first
