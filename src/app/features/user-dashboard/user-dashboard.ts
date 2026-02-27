@@ -30,6 +30,7 @@ export class UserDashboard implements OnInit, OnDestroy {
   isLoading = signal(false);
   showAddressConfirm = signal(false);
   userAddress = signal<string>('');
+  selectedImage = signal<string | null>(null);
 
   orderForm = this.fb.group({
     items: this.fb.array([]),
@@ -153,5 +154,22 @@ export class UserDashboard implements OnInit, OnDestroy {
   closeOverlay() {
     this.selectedOrderId.set(null);
     this.selectedItems.set([]);
+  }
+
+  getProductImage(productId: number): string {
+    const product = this.products().find(p => p.product_id === productId);
+    return product?.image_url || 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="40" height="40"%3E%3Crect width="40" height="40" fill="%23ddd"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="10" fill="%23999"%3EProduct%3C/text%3E%3C/svg%3E';
+  }
+
+  getPlaceholderImage(size: number = 50): string {
+    return `data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}"%3E%3Crect width="${size}" height="${size}" fill="%23ddd"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="10" fill="%23999"%3EProduct%3C/text%3E%3C/svg%3E`;
+  }
+
+  openImageModal(imageUrl: string) {
+    this.selectedImage.set(imageUrl);
+  }
+
+  closeImageModal() {
+    this.selectedImage.set(null);
   }
 }
